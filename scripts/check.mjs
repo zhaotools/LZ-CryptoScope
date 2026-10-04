@@ -57,4 +57,17 @@ assert.equal(archive.asOf, "2026-09-28");
 assert.deepEqual(archive.sections.map(section => section.items.length), [10, 10, 10]);
 const archiveUnion = new Set(archive.sections.flatMap(section => section.items.map(item => item.symbol)));
 assert.equal(archiveUnion.size, 14);
-console.log(`Checks passed: ${daily.assets.length} assets, three Top 10s, ${news.issues.length} news issues, legacy archive.`);
+
+const index = await readFile(join(root, "index.html"), "utf8");
+assert.ok(index.includes(`data-static-snapshot="${daily.asOf}"`), "published HTML is behind market snapshot");
+assert.ok(index.includes(`${news.issues[0].date.replaceAll("-", ".")} · ${news.issues[0].items.length} 条`), "published HTML is behind news snapshot");
+assert.equal((index.match(/class="rank-static-link"/g) || []).length, 30, "static page must contain all three Top 10s");
+for (const asset of daily.assets) {
+  const detail = await readFile(join(root, "projects", `${asset.symbol}.html`), "utf8");
+  assert.ok(detail.includes(`${asset.name}（${asset.symbol}）项目资料`), `${asset.symbol}: missing project page`);
+}
+for (const issue of news.issues) {
+  const page = await readFile(join(root, "news", `${issue.date}.html`), "utf8");
+  assert.ok(page.includes(`${issue.date} 每日新闻`), `${issue.date}: missing news page`);
+}
+console.log(`Checks passed: ${daily.assets.length} assets, three Top 10s, ${news.issues.length} news issues, generated pages, legacy archive.`);

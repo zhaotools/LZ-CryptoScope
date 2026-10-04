@@ -31,11 +31,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Validate published snapshot
+        run: node scripts/check.mjs
       - name: Prepare static site
         run: |
           mkdir -p _site/data
           cp index.html .nojekyll _site/
           cp -R assets _site/
+          cp -R projects news _site/
           cp data/daily.json data/news.json data/archive-2026-09-28.json _site/data/
       - uses: actions/upload-pages-artifact@v4
         with:

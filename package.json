@@ -6,6 +6,7 @@
   "scripts": {
     "update:market": "node scripts/update-market.mjs",
     "update:news": "node scripts/update-news.mjs",
+    "render": "node scripts/render-index.mjs",
     "check": "node scripts/check.mjs"
   },
   "engines": { "node": ">=22" }

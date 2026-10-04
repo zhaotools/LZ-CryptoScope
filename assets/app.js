@@ -190,6 +190,10 @@ function renderDetail(symbol) {
 
 function showFailure(error) {
   console.error(error);
+  if ($("#home-view").dataset.staticSnapshot) {
+    $("#hero-freshness").textContent = "显示已保存的 " + $("#home-view").dataset.staticSnapshot + " UTC 快照；交互数据暂时不可用";
+    return;
+  }
   $("#hero-freshness").textContent = "数据读取失败，请稍后重试";
   $("#rank-rows").innerHTML = `<div class="empty">榜单暂时无法加载。请刷新页面或查看稍后的每日更新。</div>`;
   $("#project-grid").innerHTML = `<div class="empty">项目资料暂时无法加载。</div>`;
@@ -205,6 +209,7 @@ async function start() {
   if (!daily?.assets?.length || !daily?.rankings?.d30) throw new Error("invalid market snapshot");
   state.data = daily; state.news = news; state.archive = archive;
   renderHero(); renderRanks(); renderIntersection(); renderProjects(); renderNews(); renderArchive();
+  $("#static-periods")?.setAttribute("hidden", "");
   document.querySelectorAll("[data-period]").forEach(button => button.addEventListener("click", () => { state.period = button.dataset.period; state.hidden = new Set(["ETH"]); renderRanks(); }));
   $("#top5-btn").addEventListener("click", () => { state.hidden = new Set(state.data.rankings[state.period].slice(5).map(row => row.symbol).concat("ETH")); renderChart(); });
   $("#all-btn").addEventListener("click", () => { state.hidden.clear(); renderChart(); });
