@@ -1,0 +1,12 @@
+{
+  "name": "lz-cryptoscope",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "update:market": "node scripts/update-market.mjs",
+    "update:news": "node scripts/update-news.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": { "node": ">=22" }
+}

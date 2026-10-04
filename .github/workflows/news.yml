@@ -1,0 +1,38 @@
+name: Publish daily news brief
+
+on:
+  schedule:
+    # 20:15 Asia/Shanghai.
+    - cron: "15 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cryptoscope-data-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Scan verified project sources
+        run: node scripts/update-news.mjs
+      - name: Validate generated data
+        run: node scripts/check.mjs
+      - name: Publish daily issue
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/news.json
+          if ! git diff --cached --quiet; then
+            git commit -m "news: publish daily project brief"
+            git push
+          fi
