@@ -20,6 +20,7 @@ python3 -m http.server 8765
 - GitHub Actions `market.yml` 每天北京时间 09:45 运行，取前一日已完成的 UTC 日线，重算近 30 天、近 90 天、年初至今的 Top 10，提交 `data/daily.json`。
 - `news.yml` 每天北京时间 20:15 检查已接入官方来源，发布一份按北京时间归档的简报，提交 `data/news.json`。没有合格新闻时也会发布空简报；部分来源失败时显示覆盖数。
 - 两个工作流都支持手动触发。GitHub 计划任务可能延迟；网页依据快照时间显示延迟，不将旧数据伪装成实时数据。
+- `pages.yml` 在数据工作流成功后发布网站，并在每天 10:15、20:45（北京时间）补发一次。GitHub Actions 使用 `GITHUB_TOKEN` 提交的数据不会触发“从分支部署”的 Pages 构建，因此 Pages 发布来源必须设置为 **GitHub Actions**。
 - 更新脚本先验证关键数据覆盖，再原子替换快照。市场数据不完整时，保留上一份已发布结果。
 
 ## 统计范围与计算
@@ -42,4 +43,4 @@ python3 -m http.server 8765
 
 ## 发布
 
-仓库适合以 GitHub Pages 的 `main` 分支根目录发布。仓库与网页都应设置为公开。发布后分别检查：本地页面、GitHub 提交、Pages 构建状态、线上 HTML 和 JSON 数据日期。
+在仓库 Settings → Pages 中把发布来源设为 **GitHub Actions**。仓库与网页都应设置为公开。发布后分别检查：本地页面、GitHub 提交、Pages 构建状态、线上 HTML 和 JSON 数据日期。
