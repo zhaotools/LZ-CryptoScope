@@ -1,7 +1,7 @@
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const DAY = 86_400_000;
-const palette = ["#2c78d4", "#22a789", "#ee9b42", "#7d69d3", "#d46491", "#36a8c2", "#bf6e42", "#537ec2", "#8cb759", "#bd8fce"];
+const palette = ["#68adff", "#4fdbaf", "#ffc56b", "#b69aff", "#ff88b3", "#57cde9", "#f3a079", "#8eabff", "#c7de79", "#dda9f5"];
 const periodLabels = { d30: "最近 30 天", d90: "最近 90 天", ytd: "年初至今" };
 const state = { data: null, archive: null, period: "d30", hidden: new Set(["ETH"]), chartSeries: [], chartDates: [] };
 
@@ -63,8 +63,8 @@ function renderIntersection() {
 function chartData() {
   const top = state.data.rankings[state.period];
   const sources = top.map((row, i) => ({ symbol: row.symbol, history: assetOf(row.symbol).history, color: palette[i], dashed: false }));
-  sources.push({ symbol: "BTC", history: state.data.benchmarks.BTC, color: "#526984", dashed: true });
-  sources.push({ symbol: "ETH", history: state.data.benchmarks.ETH, color: "#9babc0", dashed: true });
+  sources.push({ symbol: "BTC", history: state.data.benchmarks.BTC, color: "#d0dbea", dashed: true });
+  sources.push({ symbol: "ETH", history: state.data.benchmarks.ETH, color: "#9aacbf", dashed: true });
   return sources.map(source => ({ ...source, points: normalized(source.history, state.period) })).filter(source => source.points.length);
 }
 
@@ -85,15 +85,15 @@ function renderChart() {
   const grid = Array.from({ length: 5 }, (_, i) => {
     const value = max - (max - min) * i / 4;
     const yy = y(value);
-    return `<line x1="${left}" y1="${yy}" x2="${left + width}" y2="${yy}" stroke="#e7edf3" stroke-width="1"/><text x="${left - 9}" y="${yy + 4}" text-anchor="end" font-size="10" fill="#9cabb9">${Math.round(value)}%</text>`;
+    return `<line x1="${left}" y1="${yy}" x2="${left + width}" y2="${yy}" stroke="#2c405c" stroke-width="1"/><text x="${left - 9}" y="${yy + 4}" text-anchor="end" font-size="10" fill="#9eb3cc">${Math.round(value)}%</text>`;
   }).join("");
-  const axes = first.length ? [0, Math.floor((first.length - 1) / 2), first.length - 1].map(i => `<text x="${x(i)}" y="${top + height + 25}" text-anchor="middle" font-size="10" fill="#9cabb9">${esc(first[i][0].slice(5).replace("-", "/"))}</text>`).join("") : "";
+  const axes = first.length ? [0, Math.floor((first.length - 1) / 2), first.length - 1].map(i => `<text x="${x(i)}" y="${top + height + 25}" text-anchor="middle" font-size="10" fill="#9eb3cc">${esc(first[i][0].slice(5).replace("-", "/"))}</text>`).join("") : "";
   const paths = active.map(series => {
     const byDate = new Map(series.points);
     const d = state.chartDates.map((date, i) => byDate.has(date) ? `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(byDate.get(date)).toFixed(1)}` : "").join(" ");
     return `<path d="${d}" fill="none" stroke="${series.color}" stroke-width="${series.dashed ? 2 : 2.4}" ${series.dashed ? 'stroke-dasharray="6 5"' : ""} stroke-linejoin="round" stroke-linecap="round" opacity="${series.dashed ? .7 : .9}"/>`;
   }).join("");
-  svg.innerHTML = `<rect width="760" height="320" fill="#fff"/>${grid}<line x1="${left}" y1="${y(0)}" x2="${left + width}" y2="${y(0)}" stroke="#aec1d3" stroke-width="1.3"/>${paths}${axes}<line id="hover-line" x1="0" x2="0" y1="${top}" y2="${top + height}" stroke="#748da8" stroke-width="1" stroke-dasharray="3 4" opacity="0"/>`;
+  svg.innerHTML = `<rect width="760" height="320" fill="#111d30"/>${grid}<line x1="${left}" y1="${y(0)}" x2="${left + width}" y2="${y(0)}" stroke="#5a7899" stroke-width="1.3"/>${paths}${axes}<line id="hover-line" x1="0" x2="0" y1="${top}" y2="${top + height}" stroke="#8caac9" stroke-width="1" stroke-dasharray="3 4" opacity="0"/>`;
   svg.onpointermove = event => {
     if (!state.chartDates.length) return;
     const bounds = svg.getBoundingClientRect();

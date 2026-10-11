@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1d38">
-  <meta name="description" content="LZ CryptoScope：主流基本面加密项目最近 30 天、最近 90 天和年初至今动态收益排行。">
-  <title>LZ CryptoScope｜加密基本面观察</title>
+  <meta name="theme-color" content="#0a1220">
+  <meta name="description" content="LZ CryptoScope 加密观察：最近 30 天、最近 90 天和年初至今加密动态收益排行。">
+  <title>LZ CryptoScope｜加密观察</title>
   <link rel="stylesheet" href="./assets/styles.css">
   <script type="module" src="./assets/app.js"></script>
 </head>
 <body>
   <header class="site-header">
     <div class="nav-inner">
-      <a class="brand" href="./" aria-label="LZ CryptoScope 首页"><span class="brand-mark">LZ<span class="brand-mark-dot">.</span></span><span class="brand-name">CryptoScope<small>加密基本面观察</small></span></a>
+      <a class="brand" href="./" aria-label="LZ CryptoScope 首页"><span class="brand-mark">LZ<span class="brand-mark-dot">.</span></span><span class="brand-name">CryptoScope<small>加密观察</small></span></a>
       <nav class="main-nav" aria-label="主导航">
-        <a href="./#rankings">动态排行</a><a href="./#method">数据与方法</a>
+        <a href="./#rankings">加密动态收益排行</a><a href="./#method">数据与方法</a>
       </nav>
       <span class="nav-live"><span class="live-dot"></span>每日更新</span>
     </div>
@@ -23,7 +23,7 @@
   <main id="home-view">
     <div class="shell main-stack">
       <section id="rankings" class="section" aria-labelledby="rank-title">
-        <div class="section-heading"><div><div class="section-kicker">01 / MARKET RANKING</div><h2 id="rank-title">动态收益排行</h2><p>同一候选池，同一行情口径。每日根据最新已完成的 UTC 日线重算。</p></div><div class="asof-badge"><span class="asof-icon">◷</span><span id="rank-asof">数据加载中</span></div></div>
+        <div class="section-heading"><div><div class="section-kicker">01 / MARKET RANKING</div><h2 id="rank-title">加密动态收益排行</h2><p>同一候选池，同一行情口径。每日根据最新已完成的 UTC 日线重算。</p></div><div class="asof-badge"><span class="asof-icon">◷</span><span id="rank-asof">数据加载中</span></div></div>
         <div class="ranking-panel">
           <div class="ranking-toolbar"><div class="segmented" role="tablist" aria-label="排行周期"><button type="button" class="active" data-period="d30" role="tab" aria-selected="true">最近 30 天</button><button type="button" data-period="d90" role="tab" aria-selected="false">最近 90 天</button><button type="button" data-period="ytd" role="tab" aria-selected="false">年初至今</button></div><span id="rank-coverage" class="coverage-text">—</span></div>
           <div class="rank-content"><div class="rank-list"><div class="rank-col-head"><span>排名 / 项目</span><span>区间收益</span></div><div id="rank-rows" aria-live="polite"></div></div><div class="chart-panel"><div class="chart-head"><div><div class="chart-kicker">RELATIVE PERFORMANCE</div><h3>收益曲线</h3><p>区间起点统一为 0%</p></div><div class="chart-actions"><button type="button" id="top5-btn" class="small-button">只看前五</button><button type="button" id="all-btn" class="small-button">显示全部</button></div></div><div class="chart-wrap"><svg id="returns-chart" viewBox="0 0 760 320" role="img" aria-label="前十项目及基准资产的收益曲线"></svg><div id="chart-tip" class="chart-tip" hidden></div></div><div id="chart-legend" class="chart-legend" aria-label="曲线开关"></div><div class="chart-footer"><span>点击图例可显示或隐藏曲线</span><span>基准：BTC / ETH</span></div></div></div>
@@ -34,12 +34,12 @@
 
       <section id="method" class="section method-section" aria-labelledby="method-title">
         <div class="section-heading"><div><div class="section-kicker">02 / METHODOLOGY</div><h2 id="method-title">数据与方法</h2><p>候选池和收益计算口径公开可查。</p></div></div>
-        <div class="method-grid"><article><span class="method-num">01</span><h3>候选池</h3><p>人工审核的主流基本面项目池，当前包括 <strong id="method-universe">—</strong> 个项目。排除 BTC、ETH、稳定币、锚定资产及纯 Meme 项目。入池不代表投资推荐。</p></article><article><span class="method-num">02</span><h3>收益口径</h3><p>使用 Binance 现货 USDT 交易对的 UTC 完整日收盘价；收益＝终点价 ÷ 起点价－1。30 天和 90 天按完整自然日计算，年初从上年 12 月 31 日收盘算起。</p></article></div>
+        <div class="method-grid"><article><span class="method-num">01</span><h3>候选池</h3><p>人工审核的主流加密项目候选池，当前包括 <strong id="method-universe">—</strong> 个项目。排除 BTC、ETH、稳定币、锚定资产及纯 Meme 项目。入池不代表投资推荐。</p></article><article><span class="method-num">02</span><h3>收益口径</h3><p>使用 Binance 现货 USDT 交易对的 UTC 完整日收盘价；收益＝终点价 ÷ 起点价－1。30 天和 90 天按完整自然日计算，年初从上年 12 月 31 日收盘算起。</p></article></div>
         <div class="archive-bar"><div><span class="mini-label">HISTORICAL SNAPSHOT</span><strong>2026 年 9 月 28 日原始三榜</strong><p>保留你提供的历史排名。原榜的价格来源未在附件中完整记录，因此与当前动态榜单分开显示。</p></div><button type="button" id="archive-toggle" class="outline-button" aria-expanded="false">查看历史榜单 <span aria-hidden="true">↗</span></button></div><div id="archive-content" class="archive-content" hidden></div>
       </section>
     </div>
   </main>
 
-  <footer class="site-footer"><div class="shell footer-inner"><div><strong>LZ<span class="footer-dot">.</span> CryptoScope</strong><p>加密基本面观察 · 数据研究用途</p></div><div class="footer-links"><a href="https://www.binance.com/en/markets/overview" target="_blank" rel="noopener noreferrer">Binance Spot</a><a href="./#method">方法说明</a></div></div><div class="shell footer-bottom">行情可能延迟或不完整。本站不构成投资建议。<span id="footer-updated">—</span></div></footer>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>LZ<span class="footer-dot">.</span> CryptoScope</strong><p>加密观察 · 数据研究用途</p></div><div class="footer-links"><a href="https://www.binance.com/en/markets/overview" target="_blank" rel="noopener noreferrer">Binance Spot</a><a href="./#method">方法说明</a></div></div><div class="shell footer-bottom">行情可能延迟或不完整。本站不构成投资建议。<span id="footer-updated">—</span></div></footer>
 </body>
 </html>

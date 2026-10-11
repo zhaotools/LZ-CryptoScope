@@ -18,7 +18,7 @@ const dateZh = value => String(value).slice(0, 10).replaceAll("-", ".");
 const pct = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${value.toFixed(1)}%` : "—";
 const assets = new Map(daily.assets.map(asset => [asset.symbol, asset]));
 const periodNames = { d30: "最近 30 天", d90: "最近 90 天", ytd: "年初至今" };
-const colors = ["#2c78d4", "#22a789", "#ee9b42", "#7d69d3", "#d46491", "#36a8c2", "#bf6e42", "#537ec2", "#8cb759", "#bd8fce", "#526984", "#9babc0"];
+const colors = ["#68adff", "#4fdbaf", "#ffc56b", "#b69aff", "#ff88b3", "#57cde9", "#f3a079", "#8eabff", "#c7de79", "#dda9f5", "#d0dbea", "#9aacbf"];
 
 function replaceOnce(source, search, value) {
   if (!source.includes(search)) throw new Error(`Template marker missing: ${search.slice(0, 80)}`);
@@ -33,7 +33,6 @@ function rankRow(row, period) {
 
 function staticChart() {
   const end = Date.parse(`${daily.asOf}T00:00:00Z`);
-  const colors = ["#2c78d4", "#22a789", "#ee9b42", "#7d69d3", "#d46491", "#36a8c2", "#bf6e42", "#537ec2", "#8cb759", "#bd8fce", "#526984", "#9babc0"];
   const sources = [...daily.rankings.d30.map(row => assets.get(row.symbol).history), daily.benchmarks.BTC, daily.benchmarks.ETH];
   const lines = sources.map(history => normalizedSeries(history, "d30", end)).filter(rows => rows.length);
   const values = lines.flatMap(rows => rows.map(([, value]) => value));
@@ -44,11 +43,11 @@ function staticChart() {
   const y = value => 20 + (max - value) / (max - min) * 255;
   const grid = Array.from({ length: 5 }, (_, index) => {
     const value = max - (max - min) * index / 4;
-    return `<line x1="48" y1="${y(value)}" x2="734" y2="${y(value)}" stroke="#e7edf3"/><text x="39" y="${y(value) + 4}" text-anchor="end" font-size="10" fill="#9cabb9">${Math.round(value)}%</text>`;
+    return `<line x1="48" y1="${y(value)}" x2="734" y2="${y(value)}" stroke="#2c405c"/><text x="39" y="${y(value) + 4}" text-anchor="end" font-size="10" fill="#9eb3cc">${Math.round(value)}%</text>`;
   }).join("");
   const paths = lines.map((rows, index) => `<path d="${rows.map(([, value], point) => `${point ? "L" : "M"}${x(point).toFixed(1)} ${y(value).toFixed(1)}`).join(" ")}" fill="none" stroke="${colors[index]}" stroke-width="${index >= 10 ? 2 : 2.4}" ${index >= 10 ? 'stroke-dasharray="6 5"' : ""} opacity=".85"/>`).join("");
-  const dates = [0, Math.floor((lines[0].length - 1) / 2), lines[0].length - 1].map(index => `<text x="${x(index)}" y="300" text-anchor="middle" font-size="10" fill="#9cabb9">${esc(lines[0][index][0].slice(5).replace("-", "/"))}</text>`).join("");
-  return `<rect width="760" height="320" fill="#fff"/>${grid}${paths}${dates}`;
+  const dates = [0, Math.floor((lines[0].length - 1) / 2), lines[0].length - 1].map(index => `<text x="${x(index)}" y="300" text-anchor="middle" font-size="10" fill="#9eb3cc">${esc(lines[0][index][0].slice(5).replace("-", "/"))}</text>`).join("");
+  return `<rect width="760" height="320" fill="#111d30"/>${grid}${paths}${dates}`;
 }
 
 let html = template;
