@@ -4,12 +4,11 @@ on:
   push:
     branches: [main]
   workflow_run:
-    workflows: ["Refresh market data", "Publish daily news brief"]
+    workflows: ["Refresh market data"]
     types: [completed]
   schedule:
-    # Fallback refreshes at 10:15 and 20:45 Asia/Shanghai.
+    # Fallback refresh at 10:15 Asia/Shanghai.
     - cron: "15 2 * * *"
-    - cron: "45 12 * * *"
   workflow_dispatch:
 
 permissions:
@@ -38,8 +37,7 @@ jobs:
           mkdir -p _site/data
           cp index.html .nojekyll _site/
           cp -R assets _site/
-          cp -R projects news _site/
-          cp data/daily.json data/news.json data/archive-2026-09-28.json _site/data/
+          cp data/daily.json data/archive-2026-09-28.json _site/data/
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

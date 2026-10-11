@@ -7,7 +7,7 @@ import { rankAssets, returnsFromHistory, normalizedSeries, utcDay, periodStart }
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const read = name => readFile(join(root, "data", name), "utf8").then(JSON.parse);
-const [daily, news, archive] = await Promise.all([read("daily.json"), read("news.json"), read("archive-2026-09-28.json")]);
+const [daily, archive] = await Promise.all([read("daily.json"), read("archive-2026-09-28.json")]);
 
 assert.equal(new Set(universe.map(item => item.symbol)).size, universe.length, "duplicate universe symbol");
 assert.equal(new Set(universe.map(item => item.pair)).size, universe.length, "duplicate spot pair");
@@ -42,17 +42,6 @@ for (const period of ["d30", "d90", "ytd"]) {
 }
 for (const benchmark of ["BTC", "ETH"]) assert.equal(daily.benchmarks[benchmark].at(-1)[0], daily.asOf);
 
-assert.ok(news.issues.length >= 1, "no daily news issue");
-assert.equal(new Set(news.issues.map(issue => issue.date)).size, news.issues.length, "duplicate news day");
-for (const issue of news.issues) {
-  assert.match(issue.date, /^\d{4}-\d{2}-\d{2}$/);
-  assert.ok(issue.sourceStatus.some(source => source.ok), `${issue.date}: no healthy news sources`);
-  for (const item of issue.items) {
-    assert.equal(new URL(item.url).protocol, "https:");
-    assert.ok(item.title && item.source && item.symbols.length, "incomplete news item");
-  }
-}
-
 assert.equal(archive.asOf, "2026-09-28");
 assert.deepEqual(archive.sections.map(section => section.items.length), [10, 10, 10]);
 const archiveUnion = new Set(archive.sections.flatMap(section => section.items.map(item => item.symbol)));
@@ -60,14 +49,9 @@ assert.equal(archiveUnion.size, 14);
 
 const index = await readFile(join(root, "index.html"), "utf8");
 assert.ok(index.includes(`data-static-snapshot="${daily.asOf}"`), "published HTML is behind market snapshot");
-assert.ok(index.includes(`${news.issues[0].date.replaceAll("-", ".")} · ${news.issues[0].items.length} 条`), "published HTML is behind news snapshot");
-assert.equal((index.match(/class="rank-static-link"/g) || []).length, 30, "static page must contain all three Top 10s");
-for (const asset of daily.assets) {
-  const detail = await readFile(join(root, "projects", `${asset.symbol}.html`), "utf8");
-  assert.ok(detail.includes(`${asset.name}（${asset.symbol}）项目资料`), `${asset.symbol}: missing project page`);
+assert.equal((index.match(/class="rank-static-name"/g) || []).length, 30, "static page must contain all three Top 10s");
+assert.ok(index.indexOf('id="rankings"') < index.indexOf('id="method"'), "rankings must be the first content section");
+for (const removed of ['class="hero"', 'id="projects"', 'id="news"', 'id="detail-view"']) {
+  assert.ok(!index.includes(removed), `removed module still present: ${removed}`);
 }
-for (const issue of news.issues) {
-  const page = await readFile(join(root, "news", `${issue.date}.html`), "utf8");
-  assert.ok(page.includes(`${issue.date} 每日新闻`), `${issue.date}: missing news page`);
-}
-console.log(`Checks passed: ${daily.assets.length} assets, three Top 10s, ${news.issues.length} news issues, generated pages, legacy archive.`);
+console.log(`Checks passed: ${daily.assets.length} assets, three Top 10s, ranking-first page, legacy archive.`);
